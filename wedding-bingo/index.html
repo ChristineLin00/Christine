@@ -3,222 +3,496 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>歡樂婚禮 Bingo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#FFF0F5">
+  <title>歡樂婚禮 Bingo｜衍誠 & 巧玲</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --pink: #FF758C;
+      --pink-light: #FFB6C1;
+      --pink-dark: #D83B57;
+      --gold: #FFD166;
+      --gold-dark: #F39C12;
+      --ink: #4A4A4A;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
+      margin: 0;
       font-family: 'Noto Sans TC', sans-serif;
       background-color: #FFF0F5;
       background-image: radial-gradient(#FFD1DC 2px, transparent 2px);
       background-size: 30px 30px;
-      color: #4A4A4A;
+      color: var(--ink);
+      min-height: 100vh;
     }
-    .title-font { font-family: 'Fredoka', sans-serif; }
-    
-    /* 照片外框與微傾斜動畫 */
+
+    .title-font { font-family: 'Fredoka', 'Noto Sans TC', sans-serif; }
+
     .photo-container {
       border: 8px solid white;
       box-shadow: 0 10px 25px rgba(255, 105, 135, 0.2);
       transform: rotate(-3deg);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform .3s cubic-bezier(.175,.885,.32,1.275);
     }
     .photo-container:hover { transform: rotate(1deg) scale(1.02); }
-    
-    /* 抽號主舞台 */
+
     .stage-card {
       background: linear-gradient(135deg, #FF758C 0%, #FF7EB3 100%);
-      box-shadow: 0 15px 35px rgba(255, 117, 140, 0.3);
-    }
-    
-    .number-display {
-      font-size: clamp(6rem, 25vw, 10rem);
-      font-weight: 900;
-      color: white;
-      text-shadow: 4px 6px 0px rgba(216, 59, 87, 0.5);
-      line-height: 1;
-      transition: all 0.3s ease;
-    }
-    .number-display.pop {
-      animation: bounce-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    @keyframes bounce-pop {
-      0% { transform: scale(0.5); opacity: 0; }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); opacity: 1; }
+      box-shadow: 0 15px 35px rgba(255, 117, 140, .3);
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
     }
 
-    /* 立體按鈕 */
+    .stage-card::before,
+    .stage-card::after {
+      content: "♥";
+      position: absolute;
+      color: rgba(255,255,255,.17);
+      font-size: 6rem;
+      line-height: 1;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .stage-card::before { top: 12px; left: 18px; transform: rotate(-18deg); }
+    .stage-card::after { right: 15px; bottom: 8px; transform: rotate(15deg); }
+
+    @keyframes machine-shake {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      20% { transform: translate(-2px, 1px) rotate(-.4deg); }
+      40% { transform: translate(2px, -1px) rotate(.4deg); }
+      60% { transform: translate(-1px, -2px) rotate(0); }
+      80% { transform: translate(1px, 2px) rotate(-.3deg); }
+    }
+    .shuffling { animation: machine-shake .22s infinite; }
+
+    .ball-container {
+      perspective: 1000px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 210px;
+      padding: 12px 0;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .bingo-ball {
+      width: clamp(132px, 34vw, 160px);
+      height: clamp(132px, 34vw, 160px);
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 29% 20%, rgba(255,255,255,.98) 0%, rgba(255,255,255,.72) 5%, transparent 17%),
+        radial-gradient(circle at 35% 32%, #FFDDE5 0%, #FFACBD 18%, #FF758C 53%, #E84C6B 78%, #BD2948 100%);
+      box-shadow:
+        0 15px 25px rgba(95, 15, 35, .28),
+        inset -15px -17px 24px rgba(170, 25, 55, .38),
+        inset 10px 10px 19px rgba(255,255,255,.68);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bingo-ball::before {
+      content: "";
+      position: absolute;
+      top: 15%;
+      left: 18%;
+      width: 24%;
+      height: 12%;
+      border-radius: 50%;
+      background: rgba(255,255,255,.6);
+      filter: blur(5px);
+      transform: rotate(-35deg);
+    }
+
+    .bingo-ball-inner {
+      width: 57%;
+      height: 57%;
+      background: radial-gradient(circle at 35% 25%, #fff 0%, #fff 72%, #FFF0F3 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 3px 7px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.1);
+      border: 2px solid rgba(255,255,255,.95);
+      position: relative;
+      z-index: 1;
+    }
+
+    .number-display {
+      font-size: clamp(3.1rem, 10vw, 4rem);
+      font-weight: 900;
+      color: var(--pink-dark);
+      line-height: 1;
+      font-family: 'Fredoka', sans-serif;
+      text-shadow: 0 1px 0 #fff;
+    }
+
+    @keyframes lottery-roll-in {
+      0% {
+        transform: translate(210px, -32px) rotate(0deg) scale(.55);
+        opacity: 0;
+      }
+      38% {
+        transform: translate(34px, 4px) rotate(300deg) scale(1.04);
+        opacity: 1;
+      }
+      57% {
+        transform: translate(-13px, -9px) rotate(470deg) scale(.98);
+      }
+      74% {
+        transform: translate(6px, 2px) rotate(590deg) scale(1.015);
+      }
+      88% {
+        transform: translate(-2px, 0) rotate(660deg) scale(1);
+      }
+      100% {
+        transform: translate(0, 0) rotate(720deg) scale(1);
+        opacity: 1;
+      }
+    }
+    .animate-roll {
+      animation: lottery-roll-in 1.15s cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    .wait-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      opacity: .95;
+    }
+
+    .sparkle, .floating-heart {
+      position: absolute;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      user-select: none;
+    }
+    .sparkle { color: #FFE7A3; text-shadow: 0 0 12px rgba(255, 229, 153, .8); }
+    .floating-heart { color: #fff0f5; text-shadow: 0 2px 8px rgba(216,59,87,.25); }
+
+    @keyframes sparkle-pop {
+      0% { transform: translate(0, 12px) scale(.2) rotate(-25deg); opacity: 0; }
+      25% { opacity: 1; }
+      75% { opacity: .95; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1.15) rotate(22deg); opacity: 0; }
+    }
+    .sparkle.play { animation: sparkle-pop .9s ease-out forwards; }
+
+    @keyframes heart-float {
+      0% { transform: translateY(10px) scale(.5) rotate(-10deg); opacity: 0; }
+      20% { opacity: .95; }
+      100% { transform: translateY(-48px) scale(1.15) rotate(12deg); opacity: 0; }
+    }
+    .floating-heart.play { animation: heart-float 1.15s ease-out forwards; }
+
     .btn-draw {
       background: #FFD166;
-      color: #D35400;
-      box-shadow: 0 6px 0px #F39C12;
-      transition: all 0.1s;
+      color: #A94C08;
+      box-shadow: 0 6px 0 #F39C12;
+      transition: transform .1s, box-shadow .1s, filter .2s;
+      touch-action: manipulation;
     }
-    .btn-draw:active {
-      transform: translateY(6px);
-      box-shadow: 0 0px 0px #F39C12;
+    .btn-draw:hover:not(:disabled) { filter: brightness(1.03); }
+    .btn-draw:active:not(:disabled) {
+      transform: translateY(5px);
+      box-shadow: 0 1px 0 #F39C12;
+    }
+    .btn-draw:disabled {
+      background: #FFE4E1;
+      color: #D76A7D;
+      box-shadow: 0 5px 0 #FFB6C1;
+      cursor: not-allowed;
     }
 
-    /* 號碼總表小格 */
     .grid-cell {
       background: white;
       border: 2px solid #FFE4E1;
       color: #FF758C;
-      font-weight: bold;
-      border-radius: 0.75rem;
-      transition: all 0.2s;
+      font-weight: 700;
+      border-radius: .75rem;
+      transition: background .25s, color .25s, border-color .25s, transform .25s, box-shadow .25s;
     }
     .grid-cell.drawn {
-      background: #FF758C;
+      background: #FF9AAF;
       color: white;
-      border-color: #FF758C;
-      transform: scale(0.95);
+      border-color: #FF9AAF;
     }
     .grid-cell.current {
       background: #FFD166;
-      color: #D35400;
+      color: #A94C08;
       border-color: #F39C12;
-      transform: scale(1.1);
-      box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
-      z-index: 10;
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(243,156,18,.35);
+      position: relative;
+      z-index: 1;
+    }
+
+    .reset-btn:focus-visible, .btn-draw:focus-visible {
+      outline: 3px solid #A94C08;
+      outline-offset: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen py-8 px-4">
-  <div class="max-w-5xl mx-auto space-y-8">
-    
-    <!-- 頂部：照片與婚禮標題 -->
-    <header class="flex flex-col md:flex-row items-center gap-8 bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-xl">
+<body class="py-6 px-4 md:py-8">
+  <div class="max-w-5xl mx-auto space-y-7 md:space-y-8">
+
+    <header class="flex flex-col md:flex-row items-center gap-6 md:gap-8 bg-white/85 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xl">
       <div class="shrink-0">
-        <!-- 讀取同資料夾下的照片 -->
-        <img src="23160-0188.jpg" 
-             alt="Couple" 
-             class="photo-container w-48 h-48 object-cover rounded-2xl">
+        <!-- 將 23160-0188.jpg 放在本 HTML 同一個資料夾 -->
+        <img src="23160-0188.jpg"
+             alt="衍誠與巧玲的婚禮照片"
+             class="photo-container w-40 h-40 md:w-48 md:h-48 object-cover rounded-2xl"
+             onerror="this.style.display='none'; document.getElementById('photo-fallback').style.display='flex';">
+        <div id="photo-fallback" aria-label="婚禮照片預留位置" class="hidden w-40 h-40 md:w-48 md:h-48 rounded-2xl border-4 border-white bg-pink-100 items-center justify-center text-pink-400 text-5xl shadow-lg">♡</div>
       </div>
       <div class="text-center md:text-left flex-1">
         <p class="text-sm font-bold text-[#FF758C] tracking-widest uppercase mb-2">Let's Play Bingo!</p>
-        <h1 class="title-font text-4xl md:text-5xl text-gray-800 mb-3">衍誠 & 巧玲的婚禮</h1>
-        <p class="text-gray-500 font-medium">準備好你們的 Bingo 卡，最快完成 2 條連線的前 6 名有驚喜大獎！</p>
+        <h1 class="title-font text-3xl md:text-5xl text-gray-800 mb-3">衍誠 & 巧玲的婚禮</h1>
+        <p class="text-gray-500 font-medium leading-relaxed">
+          只要連成 <span class="text-[#FF758C] font-bold">1 條線</span>，大聲喊出 Bingo，驚喜禮物就是你的！
+        </p>
+        <p class="text-pink-300 text-sm mt-2">♡ A little love, a lot of happiness ♡</p>
       </div>
     </header>
 
-    <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- 左側：抽號主控台 -->
-      <section class="space-y-6">
-        <div class="stage-card rounded-3xl p-10 text-center relative overflow-hidden">
-          <p class="text-white/80 font-bold tracking-widest mb-4">目前抽出的號碼</p>
-          <div id="current-number" class="number-display">—</div>
-        </div>
-        
-        <button id="draw-btn" class="btn-draw w-full py-5 rounded-2xl text-2xl font-bold title-font flex items-center justify-center gap-2">
-          🎉 抽下一個號碼！
-        </button>
-        
-        <div class="bg-white p-5 rounded-2xl shadow-sm text-center">
-          <p class="text-gray-500 font-medium mb-2">已抽出 <span id="count-drawn" class="text-[#FF758C] font-bold text-xl">0</span> / 25 個號碼</p>
-          <div class="w-full bg-gray-100 rounded-full h-3">
-            <div id="progress-bar" class="bg-[#FF758C] h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+    <main class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      <section class="space-y-5">
+        <div id="stage-card" class="stage-card rounded-3xl p-5 md:p-8 text-center">
+          <p class="text-white/95 font-bold tracking-widest mb-1 drop-shadow-md">最新開出獎號</p>
+          <p class="text-white/75 text-sm mb-1">Ready, set, Bingo! ✨</p>
+
+          <div id="ball-container" class="ball-container">
+            <div id="wait-text" class="wait-text title-font">準備好要抽出第一個號碼了嗎？</div>
+            <div id="bingo-ball" class="bingo-ball" aria-live="polite" aria-label="尚未開獎">
+              <div class="bingo-ball-inner">
+                <span id="current-number" class="number-display">?</span>
+              </div>
+            </div>
+            <span class="sparkle text-3xl" data-sparkle="0" style="left:12%;top:22%;--dx:-8px;--dy:-24px">✦</span>
+            <span class="sparkle text-2xl" data-sparkle="1" style="right:13%;top:18%;--dx:10px;--dy:-20px">✧</span>
+            <span class="sparkle text-3xl" data-sparkle="2" style="left:21%;bottom:18%;--dx:-10px;--dy:12px">★</span>
+            <span class="sparkle text-2xl" data-sparkle="3" style="right:20%;bottom:19%;--dx:10px;--dy:10px">✦</span>
+            <span class="floating-heart text-2xl" data-heart="0" style="left:27%;top:30%">♥</span>
+            <span class="floating-heart text-xl" data-heart="1" style="right:27%;top:34%">♥</span>
           </div>
+          <p id="stage-caption" class="text-white/90 text-sm font-medium mt-1">祝大家好運連連！</p>
+        </div>
+
+        <button id="draw-btn" type="button" class="btn-draw w-full py-4 md:py-5 rounded-2xl text-xl md:text-2xl font-bold title-font flex items-center justify-center gap-2">
+          🎉 啟動搖獎機！
+        </button>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm text-center">
+          <p class="text-gray-500 font-medium mb-3">
+            已抽出 <span id="count-drawn" class="text-[#FF758C] font-bold text-xl tabular-nums">0</span>
+            <span class="text-gray-400">/ 25 個號碼</span>
+          </p>
+          <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden" role="progressbar" aria-label="抽獎進度" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" id="progress-track">
+            <div id="progress-bar" class="bg-gradient-to-r from-[#FFB6C1] to-[#FF758C] h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+          </div>
+          <p id="progress-caption" class="text-xs text-gray-400 mt-2">好運正在靠近 ♡</p>
         </div>
       </section>
 
-      <!-- 右側：全區號碼表 -->
-      <section class="bg-white p-6 rounded-3xl shadow-xl flex flex-col">
-        <h2 class="title-font text-2xl text-gray-800 mb-4 text-center">號碼總表</h2>
-        <div id="number-grid" class="grid grid-cols-5 gap-2 flex-1">
-          <!-- 號碼由 JavaScript 自動生成 -->
+      <section class="bg-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <span class="text-pink-300">✦</span>
+          <h2 class="title-font text-2xl text-gray-800 text-center">號碼總表</h2>
+          <span class="text-pink-300">✦</span>
         </div>
-        <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
+        <div id="number-grid" class="grid grid-cols-5 gap-2 flex-1" aria-label="1 至 25 號抽獎總表"></div>
+        <div class="mt-6 pt-4 border-t border-pink-100 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
           <p class="text-sm text-gray-400">點擊重新開始可清空號碼</p>
-          <button id="reset-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm font-bold transition">
-            重新開始本輪
+          <button id="reset-btn" type="button" class="reset-btn px-4 py-2.5 bg-gray-100 hover:bg-pink-100 text-gray-600 rounded-lg text-sm font-bold transition">
+            ↻ 重新開始本輪
           </button>
         </div>
       </section>
     </main>
 
+    <footer class="text-center text-pink-300 text-sm pb-2">
+      Made with love ♡ Thank you for celebrating with us!
+    </footer>
   </div>
 
   <script>
-    const TOTAL = 25;
-    let drawn = [];
-    let current = null;
+    (() => {
+      'use strict';
 
-    const display = document.getElementById('current-number');
-    const drawBtn = document.getElementById('draw-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const grid = document.getElementById('number-grid');
-    const countText = document.getElementById('count-drawn');
-    const progress = document.getElementById('progress-bar');
+      const TOTAL = 25;
+      let availableNumbers = Array.from({ length: TOTAL }, (_, i) => i + 1);
+      let drawn = [];
+      let current = null;
+      let isDrawing = false;
+      let drawTimer = null;
 
-    // 生成 1-25 的網格
-    for(let i = 1; i <= TOTAL; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'grid-cell flex items-center justify-center text-xl h-14';
-      cell.textContent = i;
-      cell.id = 'cell-' + i;
-      grid.appendChild(cell);
-    }
+      const stageCard = document.getElementById('stage-card');
+      const ballContainer = document.getElementById('ball-container');
+      const bingoBall = document.getElementById('bingo-ball');
+      const waitText = document.getElementById('wait-text');
+      const displayNum = document.getElementById('current-number');
+      const drawBtn = document.getElementById('draw-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const grid = document.getElementById('number-grid');
+      const countText = document.getElementById('count-drawn');
+      const progress = document.getElementById('progress-bar');
+      const progressTrack = document.getElementById('progress-track');
+      const progressCaption = document.getElementById('progress-caption');
+      const stageCaption = document.getElementById('stage-caption');
 
-    function updateUI() {
-      // 更新大號碼顯示
-      display.textContent = current || '—';
-      if(current) {
-        display.classList.remove('pop');
-        void display.offsetWidth; // 觸發重繪以重啟動畫
-        display.classList.add('pop');
+      // 建立 1–25 號碼格
+      for (let i = 1; i <= TOTAL; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell flex items-center justify-center text-lg md:text-xl h-12 md:h-14';
+        cell.textContent = i;
+        cell.id = 'cell-' + i;
+        cell.setAttribute('aria-label', `${i} 號，尚未抽出`);
+        grid.appendChild(cell);
       }
 
-      // 更新總表狀態
-      for(let i = 1; i <= TOTAL; i++) {
-        const cell = document.getElementById('cell-' + i);
-        cell.classList.toggle('drawn', drawn.includes(i));
-        cell.classList.toggle('current', i === current);
+      function updateGridAndProgress() {
+        for (let i = 1; i <= TOTAL; i++) {
+          const cell = document.getElementById('cell-' + i);
+          const wasDrawn = drawn.includes(i);
+          cell.classList.toggle('drawn', wasDrawn);
+          cell.classList.toggle('current', i === current);
+          cell.setAttribute('aria-label', `${i} 號，${i === current ? '最新開出' : wasDrawn ? '已抽出' : '尚未抽出'}`);
+        }
+
+        countText.textContent = drawn.length;
+        const percent = (drawn.length / TOTAL) * 100;
+        progress.style.width = percent + '%';
+        progressTrack.setAttribute('aria-valuenow', String(drawn.length));
+
+        if (availableNumbers.length === 0) {
+          drawBtn.textContent = '🎊 全數抽完啦！';
+          drawBtn.disabled = true;
+          progressCaption.textContent = '25 個號碼全數開出，恭喜 Bingo！';
+          stageCaption.textContent = '🎉 本輪圓滿完成，祝福滿滿！';
+        } else {
+          progressCaption.textContent = drawn.length === 0 ? '好運正在靠近 ♡' : `再接再厲！還有 ${availableNumbers.length} 個號碼`;
+        }
       }
 
-      // 更新進度條
-      countText.textContent = drawn.length;
-      progress.style.width = (drawn.length / TOTAL * 100) + '%';
-      
-      // 更新按鈕狀態
-      if(drawn.length >= TOTAL) {
-        drawBtn.textContent = '全數抽完啦！';
-        drawBtn.style.opacity = '0.5';
-        drawBtn.style.pointerEvents = 'none';
-      } else {
-        drawBtn.textContent = '🎉 抽下一個號碼！';
-        drawBtn.style.opacity = '1';
-        drawBtn.style.pointerEvents = 'auto';
+      function playCelebration() {
+        document.querySelectorAll('[data-sparkle], [data-heart]').forEach((el) => {
+          el.classList.remove('play');
+          // Restart CSS animation without requiring a layout-specific API.
+          void el.offsetWidth;
+          el.classList.add('play');
+        });
       }
-    }
 
-    // ✅ 更新為「漸進式產生 8 位得獎者」的完美劇本
-    const PRESET_SEQUENCE = [16, 8, 18, 21, 11, 24, 2, 22, 13, 4, 1, 9, 12, 14, 20, 25, 23, 17, 7, 10, 5, 15, 19, 3, 6];
+      function stopCelebration() {
+        document.querySelectorAll('[data-sparkle], [data-heart]').forEach((el) => {
+          el.classList.remove('play');
+        });
+      }
 
-    // 抽號邏輯
-    drawBtn.addEventListener('click', () => {
-      if(drawn.length >= TOTAL) return;
-      
-      // 依序從預設陣列中拿取下一個號碼
-      const next = PRESET_SEQUENCE[drawn.length];
-      
-      drawn.push(next);
-      current = next;
-      updateUI();
-    });
+      function finishDraw(targetNumber) {
+        stageCard.classList.remove('shuffling');
+        bingoBall.style.display = 'flex';
+        displayNum.textContent = targetNumber;
+        bingoBall.setAttribute('aria-label', `本次開出 ${targetNumber} 號`);
+        bingoBall.classList.remove('animate-roll');
+        void bingoBall.offsetWidth;
+        bingoBall.classList.add('animate-roll');
 
-    // 重新開始
-    resetBtn.addEventListener('click', () => {
-      if(confirm('確定要清空所有號碼重新開始嗎？')) {
+        waitText.style.display = 'none';
+        current = targetNumber;
+        drawn.push(current);
+
+        drawBtn.disabled = false;
+        drawBtn.textContent = '🎉 再抽一個號碼！';
+        stageCaption.textContent = `恭喜！本次開出 ${targetNumber} 號 ♡`;
+        playCelebration();
+        updateGridAndProgress();
+        isDrawing = false;
+        drawTimer = null;
+      }
+
+      drawBtn.addEventListener('click', () => {
+        if (availableNumbers.length === 0 || isDrawing) return;
+
+        isDrawing = true;
+        drawBtn.disabled = true;
+        drawBtn.textContent = '🎲 幸運彩球攪拌中...';
+        stageCaption.textContent = '好運即將揭曉！';
+        stopCelebration();
+
+        bingoBall.style.display = 'none';
+        waitText.style.display = 'flex';
+        waitText.textContent = '🎲 幸運彩球攪拌中...';
+        stageCard.classList.add('shuffling');
+
+        // 先決定本次號碼，並從可抽清單移除，確保不會重複抽出。
+        const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+        const targetNumber = availableNumbers.splice(randomIndex, 1)[0];
+
+        drawTimer = window.setTimeout(() => finishDraw(targetNumber), 1050);
+      });
+
+      resetBtn.addEventListener('click', () => {
+        if (!window.confirm('確定要清空所有號碼，重新來過嗎？')) return;
+
+        // 若動畫中重設，取消待執行的開獎，避免舊號碼稍後又跳出。
+        if (drawTimer !== null) {
+          window.clearTimeout(drawTimer);
+          drawTimer = null;
+        }
+
+        isDrawing = false;
+        availableNumbers = Array.from({ length: TOTAL }, (_, i) => i + 1);
         drawn = [];
         current = null;
-        updateUI();
-      }
-    });
 
-    updateUI();
+        stageCard.classList.remove('shuffling');
+        stopCelebration();
+        bingoBall.classList.remove('animate-roll');
+        bingoBall.style.display = 'none';
+        bingoBall.setAttribute('aria-label', '尚未開獎');
+        displayNum.textContent = '?';
+
+        waitText.style.display = 'flex';
+        waitText.textContent = '準備好要抽出第一個號碼了嗎？';
+        drawBtn.disabled = false;
+        drawBtn.textContent = '🎉 啟動搖獎機！';
+        stageCaption.textContent = '祝大家好運連連！';
+
+        updateGridAndProgress();
+      });
+
+      updateGridAndProgress();
+    })();
   </script>
 </body>
 </html>
