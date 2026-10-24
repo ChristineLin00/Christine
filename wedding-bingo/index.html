@@ -34,8 +34,8 @@
     .title-font { font-family: 'Fredoka', 'Noto Sans TC', sans-serif; }
 
     .photo-container {
-      border: 8px solid white;
-      box-shadow: 0 10px 25px rgba(255, 105, 135, 0.2);
+      border: 6px solid white;
+      box-shadow: 0 8px 20px rgba(255, 105, 135, 0.2);
       transform: rotate(-3deg);
       transition: transform .3s cubic-bezier(.175,.885,.32,1.275);
     }
@@ -77,15 +77,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 210px;
-      padding: 12px 0;
+      min-height: 200px;
+      padding: 10px 0;
       overflow: hidden;
       isolation: isolate;
     }
 
     .bingo-ball {
-      width: clamp(132px, 34vw, 160px);
-      height: clamp(132px, 34vw, 160px);
+      width: clamp(140px, 36vw, 170px);
+      height: clamp(140px, 36vw, 170px);
       flex: 0 0 auto;
       border-radius: 50%;
       background:
@@ -117,8 +117,8 @@
     }
 
     .bingo-ball-inner {
-      width: 57%;
-      height: 57%;
+      width: 60%;
+      height: 60%;
       background: radial-gradient(circle at 35% 25%, #fff 0%, #fff 72%, #FFF0F3 100%);
       border-radius: 50%;
       display: flex;
@@ -130,13 +130,14 @@
       z-index: 1;
     }
 
+    /* 放大了彩球內的數字 */
     .number-display {
-      font-size: clamp(3.1rem, 10vw, 4rem);
+      font-size: clamp(4rem, 14vw, 5.5rem);
       font-weight: 900;
       color: var(--pink-dark);
       line-height: 1;
       font-family: 'Fredoka', sans-serif;
-      text-shadow: 0 1px 0 #fff;
+      text-shadow: 0 2px 0 #fff;
     }
 
     @keyframes lottery-roll-in {
@@ -262,36 +263,39 @@
     }
   </style>
 </head>
-<body class="py-6 px-4 md:py-8">
-  <div class="max-w-5xl mx-auto space-y-7 md:space-y-8">
+<!-- 縮小了整體的上下 padding -->
+<body class="py-4 px-4 md:py-6">
+  <!-- 縮小區塊間距 space-y-4 -->
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-5">
 
-    <header class="flex flex-col md:flex-row items-center gap-6 md:gap-8 bg-white/85 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xl">
+    <!-- 縮小了 Header 的 padding 與元素間距 -->
+    <header class="flex flex-col md:flex-row items-center gap-4 md:gap-6 bg-white/85 backdrop-blur-md p-4 rounded-2xl shadow-lg">
       <div class="shrink-0">
-        <!-- 將 23160-0188.jpg 放在本 HTML 同一個資料夾 -->
+        <!-- 稍微縮小了照片尺寸 -->
         <img src="23160-0188.jpg"
              alt="衍誠與巧玲的婚禮照片"
-             class="photo-container w-40 h-40 md:w-48 md:h-48 object-cover rounded-2xl"
+             class="photo-container w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl"
              onerror="this.style.display='none'; document.getElementById('photo-fallback').style.display='flex';">
-        <div id="photo-fallback" aria-label="婚禮照片預留位置" class="hidden w-40 h-40 md:w-48 md:h-48 rounded-2xl border-4 border-white bg-pink-100 items-center justify-center text-pink-400 text-5xl shadow-lg">♡</div>
+        <div id="photo-fallback" aria-label="婚禮照片預留位置" class="hidden w-32 h-32 md:w-40 md:h-40 rounded-xl border-4 border-white bg-pink-100 items-center justify-center text-pink-400 text-4xl shadow-lg">♡</div>
       </div>
       <div class="text-center md:text-left flex-1">
-        <p class="text-sm font-bold text-[#FF758C] tracking-widest uppercase mb-2">Let's Play Bingo!</p>
-        <h1 class="title-font text-3xl md:text-5xl text-gray-800 mb-3">衍誠 & 巧玲的婚禮</h1>
+        <p class="text-sm font-bold text-[#FF758C] tracking-widest uppercase mb-1">Let's Play Bingo!</p>
+        <h1 class="title-font text-3xl md:text-4xl text-gray-800 mb-1">衍誠 & 巧玲的婚禮</h1>
         <p class="text-gray-500 font-medium leading-relaxed">
           只要連成 <span class="text-[#FF758C] font-bold">1 條線</span>，大聲喊出 Bingo，驚喜禮物就是你的！
         </p>
-        <p class="text-pink-300 text-sm mt-2">♡ A little love, a lot of happiness ♡</p>
+        <p class="text-pink-300 text-sm mt-1">♡ A little love, a lot of happiness ♡</p>
       </div>
     </header>
 
-    <main class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-      <section class="space-y-5">
-        <div id="stage-card" class="stage-card rounded-3xl p-5 md:p-8 text-center">
-          <p class="text-white/95 font-bold tracking-widest mb-1 drop-shadow-md">最新開出獎號</p>
-          <p class="text-white/75 text-sm mb-1">Ready, set, Bingo! ✨</p>
+    <main class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+      <section class="space-y-4">
+        <!-- 去除多餘說明文字的抽獎主舞台 -->
+        <div id="stage-card" class="stage-card rounded-2xl p-5 md:p-6 text-center">
+          <p class="text-white/95 font-bold tracking-widest drop-shadow-md">最新開出獎號</p>
 
           <div id="ball-container" class="ball-container">
-            <div id="wait-text" class="wait-text title-font">準備好要抽出第一個號碼了嗎？</div>
+            <div id="wait-text" class="wait-text title-font">準備抽出號碼囉！</div>
             <div id="bingo-ball" class="bingo-ball" aria-live="polite" aria-label="尚未開獎">
               <div class="bingo-ball-inner">
                 <span id="current-number" class="number-display">?</span>
@@ -304,44 +308,38 @@
             <span class="floating-heart text-2xl" data-heart="0" style="left:27%;top:30%">♥</span>
             <span class="floating-heart text-xl" data-heart="1" style="right:27%;top:34%">♥</span>
           </div>
-          <p id="stage-caption" class="text-white/90 text-sm font-medium mt-1">祝大家好運連連！</p>
         </div>
 
-        <button id="draw-btn" type="button" class="btn-draw w-full py-4 md:py-5 rounded-2xl text-xl md:text-2xl font-bold title-font flex items-center justify-center gap-2">
+        <button id="draw-btn" type="button" class="btn-draw w-full py-4 rounded-xl text-xl md:text-2xl font-bold title-font flex items-center justify-center gap-2">
           🎉 啟動搖獎機！
         </button>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm text-center">
-          <p class="text-gray-500 font-medium mb-3">
+        <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+          <p class="text-gray-500 font-medium mb-2">
             已抽出 <span id="count-drawn" class="text-[#FF758C] font-bold text-xl tabular-nums">0</span>
             <span class="text-gray-400">/ 25 個號碼</span>
           </p>
-          <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden" role="progressbar" aria-label="抽獎進度" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" id="progress-track">
-            <div id="progress-bar" class="bg-gradient-to-r from-[#FFB6C1] to-[#FF758C] h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+          <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden" role="progressbar" aria-label="抽獎進度" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" id="progress-track">
+            <div id="progress-bar" class="bg-gradient-to-r from-[#FFB6C1] to-[#FF758C] h-full rounded-full transition-all duration-500" style="width:0%"></div>
           </div>
-          <p id="progress-caption" class="text-xs text-gray-400 mt-2">好運正在靠近 ♡</p>
         </div>
       </section>
 
-      <section class="bg-white p-5 md:p-6 rounded-3xl shadow-xl flex flex-col">
-        <div class="flex items-center justify-center gap-2 mb-4">
+      <section class="bg-white p-5 md:p-6 rounded-2xl shadow-xl flex flex-col">
+        <div class="flex items-center justify-center gap-2 mb-3">
           <span class="text-pink-300">✦</span>
-          <h2 class="title-font text-2xl text-gray-800 text-center">號碼總表</h2>
+          <h2 class="title-font text-xl text-gray-800 text-center">號碼總表</h2>
           <span class="text-pink-300">✦</span>
         </div>
         <div id="number-grid" class="grid grid-cols-5 gap-2 flex-1" aria-label="1 至 25 號抽獎總表"></div>
-        <div class="mt-6 pt-4 border-t border-pink-100 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
-          <p class="text-sm text-gray-400">點擊重新開始可清空號碼</p>
-          <button id="reset-btn" type="button" class="reset-btn px-4 py-2.5 bg-gray-100 hover:bg-pink-100 text-gray-600 rounded-lg text-sm font-bold transition">
+        <div class="mt-4 pt-3 border-t border-pink-100 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
+          <p class="text-xs text-gray-400">點擊重新開始可清空號碼</p>
+          <button id="reset-btn" type="button" class="reset-btn px-3 py-2 bg-gray-100 hover:bg-pink-100 text-gray-600 rounded-lg text-sm font-bold transition">
             ↻ 重新開始本輪
           </button>
         </div>
       </section>
     </main>
-
-    <footer class="text-center text-pink-300 text-sm pb-2">
-      Made with love ♡ Thank you for celebrating with us!
-    </footer>
   </div>
 
   <script>
@@ -356,7 +354,6 @@
       let drawTimer = null;
 
       const stageCard = document.getElementById('stage-card');
-      const ballContainer = document.getElementById('ball-container');
       const bingoBall = document.getElementById('bingo-ball');
       const waitText = document.getElementById('wait-text');
       const displayNum = document.getElementById('current-number');
@@ -366,13 +363,10 @@
       const countText = document.getElementById('count-drawn');
       const progress = document.getElementById('progress-bar');
       const progressTrack = document.getElementById('progress-track');
-      const progressCaption = document.getElementById('progress-caption');
-      const stageCaption = document.getElementById('stage-caption');
 
-      // 建立 1–25 號碼格
       for (let i = 1; i <= TOTAL; i++) {
         const cell = document.createElement('div');
-        cell.className = 'grid-cell flex items-center justify-center text-lg md:text-xl h-12 md:h-14';
+        cell.className = 'grid-cell flex items-center justify-center text-lg md:text-xl h-11 md:h-12';
         cell.textContent = i;
         cell.id = 'cell-' + i;
         cell.setAttribute('aria-label', `${i} 號，尚未抽出`);
@@ -396,17 +390,12 @@
         if (availableNumbers.length === 0) {
           drawBtn.textContent = '🎊 全數抽完啦！';
           drawBtn.disabled = true;
-          progressCaption.textContent = '25 個號碼全數開出，恭喜 Bingo！';
-          stageCaption.textContent = '🎉 本輪圓滿完成，祝福滿滿！';
-        } else {
-          progressCaption.textContent = drawn.length === 0 ? '好運正在靠近 ♡' : `再接再厲！還有 ${availableNumbers.length} 個號碼`;
         }
       }
 
       function playCelebration() {
         document.querySelectorAll('[data-sparkle], [data-heart]').forEach((el) => {
           el.classList.remove('play');
-          // Restart CSS animation without requiring a layout-specific API.
           void el.offsetWidth;
           el.classList.add('play');
         });
@@ -433,7 +422,6 @@
 
         drawBtn.disabled = false;
         drawBtn.textContent = '🎉 再抽一個號碼！';
-        stageCaption.textContent = `恭喜！本次開出 ${targetNumber} 號 ♡`;
         playCelebration();
         updateGridAndProgress();
         isDrawing = false;
@@ -446,7 +434,6 @@
         isDrawing = true;
         drawBtn.disabled = true;
         drawBtn.textContent = '🎲 幸運彩球攪拌中...';
-        stageCaption.textContent = '好運即將揭曉！';
         stopCelebration();
 
         bingoBall.style.display = 'none';
@@ -454,7 +441,6 @@
         waitText.textContent = '🎲 幸運彩球攪拌中...';
         stageCard.classList.add('shuffling');
 
-        // 先決定本次號碼，並從可抽清單移除，確保不會重複抽出。
         const randomIndex = Math.floor(Math.random() * availableNumbers.length);
         const targetNumber = availableNumbers.splice(randomIndex, 1)[0];
 
@@ -464,7 +450,6 @@
       resetBtn.addEventListener('click', () => {
         if (!window.confirm('確定要清空所有號碼，重新來過嗎？')) return;
 
-        // 若動畫中重設，取消待執行的開獎，避免舊號碼稍後又跳出。
         if (drawTimer !== null) {
           window.clearTimeout(drawTimer);
           drawTimer = null;
@@ -483,10 +468,9 @@
         displayNum.textContent = '?';
 
         waitText.style.display = 'flex';
-        waitText.textContent = '準備好要抽出第一個號碼了嗎？';
+        waitText.textContent = '準備抽出號碼囉！';
         drawBtn.disabled = false;
         drawBtn.textContent = '🎉 啟動搖獎機！';
-        stageCaption.textContent = '祝大家好運連連！';
 
         updateGridAndProgress();
       });
